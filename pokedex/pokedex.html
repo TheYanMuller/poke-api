@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:wght@300;400&display=swap" rel="stylesheet">
+    <title>pokedex</title>
+</head>
+
+<body>
+    <header>
+        <button class="btnPoke"><a href="index.html">VOLTAR</a></button>
+        <h1>my pokedex</h1>
+        <div></div>
+    </header>
+
+    <div id="pokemonsDiv2"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let pokemonList = JSON.parse(localStorage.getItem('saved-pokemon-list')) || [];
+            let pokemonsDiv = document.getElementById('pokemonsDiv2');
+
+            pokemonList.forEach(function (pokemon) {
+                let pokemonContainer = document.createElement("div");
+                pokemonContainer.classList.add("pokemon-container");
+
+                let typesContainer = document.createElement("div");
+                typesContainer.classList.add("container-tipos");
+
+                let containerBtn = document.createElement("div");
+                containerBtn.classList.add("container-botoes");
+
+                let removeBtn = document.createElement("button");
+                removeBtn.classList.add("remove-button");
+                removeBtn.innerHTML = "Remover";
+
+                removeBtn.addEventListener("click", function () {
+                    
+                    const indexToRemove = pokemonList.findIndex(pokemonI => pokemonI.name === pokemon.name);
+
+                    if (indexToRemove !== -1) {
+                        
+                        pokemonList.splice(indexToRemove, 1);
+
+                        
+                        localStorage.setItem('saved-pokemon-list', JSON.stringify(pokemonList));
+
+                        console.log(`O Pokémon ${pokemon.name} foi removido da lista.`);
+                    } else {
+                        console.log(`O Pokémon ${pokemon.name} não foi encontrado na lista.`);
+                    }
+                    
+                    pokemonContainer.remove();
+                });
+
+                let detailsBtn = document.createElement("button");
+                detailsBtn.classList.add("detailsBtn");
+                detailsBtn.innerHTML = 'detalhes'
+
+                detailsBtn.addEventListener("click", function () {
+                    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+                        .then(response => response.json())
+                        .then(details => {
+                            let pokemonDetails = {
+                                name: details.name,
+                                image: details.sprites.front_default,
+                                backImage: details.sprites.back_default,
+                                stats: {
+                                    hp: details.stats[0].base_stat,
+                                    attack: details.stats[1].base_stat,
+                                    defense: details.stats[2].base_stat,
+                                    specialAttack: details.stats[3].base_stat,
+                                    specialDefense: details.stats[4].base_stat,
+                                    speed: details.stats[5].base_stat
+                                },
+                                types: details.types.map(type => type.type.name),
+                                moves: details.moves.map(move => move.move.name)
+                            };
+
+                            
+                            let savedPokemonDetails = JSON.parse(localStorage.getItem('saved-pokemon-details')) || [];
+                            savedPokemonDetails.push(pokemonDetails);
+                            localStorage.setItem('saved-pokemon-details', JSON.stringify(savedPokemonDetails));
+
+                            
+                            window.location.href = `details.html?name=${pokemonDetails.name}`;
+                        })
+                        .catch(error => console.error('Erro ao obter detalhes do Pokémon:', error));
+                });
+
+                pokemon.types.forEach(function (type) {
+                    let typediv = document.createElement("div");
+                    typediv.classList.add("tipos");
+                    typediv.innerHTML = type;
+                    typesContainer.appendChild(typediv);
+
+                    switch (type) {
+                        case 'normal':
+                            typediv.style.backgroundColor = '#A8A77A';
+                            break;
+                        case 'fire':
+                            typediv.style.backgroundColor = '#EE8130';
+                            break;
+                        case 'water':
+                            typediv.style.backgroundColor = '#6390F0';
+                            break;
+                        case 'electric':
+                            typediv.style.backgroundColor = '#F7D02C';
+                            break
+                        case 'grass':
+                            typediv.style.backgroundColor = '#7AC74C';
+                            break;
+                        case 'ice':
+                            typediv.style.backgroundColor = '#96D9D6';
+                            break;
+                        case 'fighting':
+                            typediv.style.backgroundColor = '#C22E28';
+                            break;
+                        case 'poison':
+                            typediv.style.backgroundColor = '#A33EA1';
+                            break;
+                        case 'ground':
+                            typediv.style.backgroundColor = '#E2BF65';
+                            break;
+                        case 'flying':
+                            typediv.style.backgroundColor = '#A98FF3';
+                            // Flying
+                            break;
+                        case 'psychic':
+                            typediv.style.backgroundColor = '#F95587';
+                            break;
+                        case 'bug':
+                            typediv.style.backgroundColor = '#A6B91A';
+                            break;
+                        case 'rock':
+                            typediv.style.backgroundColor = '#B6A136';
+                            break;
+                        case 'ghost':
+                            typediv.style.backgroundColor = '#735797';
+                            break;
+                        case 'dark':
+                            typediv.style.backgroundColor = '#705746';
+                            break;
+                        case 'steel':
+                            typediv.style.backgroundColor = '#B7B7CE';
+                            break;
+                        case 'fairy':
+                            typediv.style.backgroundColor = '#D685AD';
+                            break;
+                        case 'dragon':
+                            typediv.style.backgroundColor = '#6F35FC';
+                            break;
+                        default:
+                            typediv.style.backgroundColor = 'gray';
+                    }
+                });
+
+                if (pokemon.types.length > -1) {
+                    pokemonContainer.style.borderColor = getColor(pokemon.types[0])
+                }
+
+                let nome = document.createElement("p");
+                let img = document.createElement("img");
+
+                img.src = pokemon.image;
+                nome.innerHTML = pokemon.name;
+
+
+
+
+                containerBtn.appendChild(detailsBtn)
+                containerBtn.appendChild(removeBtn)
+                pokemonContainer.appendChild(nome);
+                pokemonContainer.appendChild(img);
+                pokemonContainer.appendChild(typesContainer);
+                pokemonContainer.appendChild(containerBtn)
+
+                pokemonsDiv.appendChild(pokemonContainer);
+            });
+        });
+        function getColor(typeName) {
+            switch (typeName) {
+                case 'normal':
+                    return '#A8A77A';
+                case 'fire':
+                    return '#EE8130';
+                case 'water':
+                    return '#6390F0';
+                case 'electric':
+                    return '#F7D02C';
+                case 'grass':
+                    return '#7AC74C';
+                case 'ice':
+                    return '#96D9D6';
+                case 'fighting':
+                    return '#C22E28';
+                case 'poison':
+                    return '#A33EA1';
+                case 'ground':
+                    return '#E2BF65';
+                case 'flying':
+                    return '#A98FF3';
+                case 'psychic':
+                    return '#F95587';
+                case 'bug':
+                    return '#A6B91A';
+                case 'rock':
+                    return '#B6A136';
+                case 'ghost':
+                    return '#735797';
+                case 'dark':
+                    return '#705746';
+                case 'steel':
+                    return '#B7B7CE';
+                case 'fairy':
+                    return '#D685AD';
+                case 'dragon':
+                    return '#6F35FC';
+                default:
+                    return 'gray';
+            }
+        }
+    </script>
+</body>
+
+</html>

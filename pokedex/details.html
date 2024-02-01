@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Detalhes do Pokémon</title>
+</head>
+
+<body>
+    <header>
+        <button class="btnPoke"><a href="index.html">VOLTAR</a></button>
+        <h1 id="pokemonName"></h1>
+        <div>
+            <button id="add-button" class="btnPoke">Adicionar</button>
+            <button class="btnPoke"><a href="pokedex.html">pokedex</a></button>
+        </div>
+        
+    </header>
+    <main id="main-details-page">
+        <div id="pokemonDetails">
+
+            <div id="img-page-details">
+                <img id="frontImage" alt="Front Image">
+                <img id="backImage" alt="Back Image">
+            </div>
+    
+            <div id="poke-status-page-details">
+                <h2>Status:</h2>
+                <ul id="statusList">
+                    <li><strong>HP:</strong> <span id="hp"></span></li>
+                    <li><strong>Attack:</strong> <span id="attack"></span></li>
+                    <li><strong>Defense:</strong> <span id="defense"></span></li>
+                    <li><strong>Special Attack:</strong> <span id="specialAttack"></span></li>
+                    <li><strong>Special Defense:</strong> <span id="specialDefense"></span></li>
+                    <li><strong>Speed:</strong> <span id="speed"></span></li>
+                </ul>
+            </div>
+            
+            <h2>Tipos:</h2>
+            <ul id="typesList"></ul>
+    
+            <h2>Movimentos:</h2>
+            <ul id="movesList"></ul>
+        </div>
+    </main>
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const params = new URLSearchParams(window.location.search);
+            const pokemonName = params.get("name");
+
+            const savedPokemonDetails = JSON.parse(localStorage.getItem('saved-pokemon-details')) || [];
+            const selectedPokemonDetails = savedPokemonDetails.find(pokemon => pokemon.name === pokemonName);
+
+            if (selectedPokemonDetails) {
+                document.getElementById("pokemonName").innerText = selectedPokemonDetails.name;
+                document.getElementById("frontImage").src = selectedPokemonDetails.image;
+                document.getElementById("backImage").src = selectedPokemonDetails.backImage || selectedPokemonDetails.image;
+
+                document.getElementById("hp").innerText = selectedPokemonDetails.stats.hp;
+                document.getElementById("attack").innerText = selectedPokemonDetails.stats.attack;
+                document.getElementById("defense").innerText = selectedPokemonDetails.stats.defense;
+                document.getElementById("specialAttack").innerText = selectedPokemonDetails.stats.specialAttack;
+                document.getElementById("specialDefense").innerText = selectedPokemonDetails.stats.specialDefense;
+                document.getElementById("speed").innerText = selectedPokemonDetails.stats.speed;
+
+                const typesList = document.getElementById("typesList");
+                selectedPokemonDetails.types.forEach(type => {
+                    const li = document.createElement("li");
+                    li.innerText = type;
+                    typesList.appendChild(li);
+                });
+                
+                const movesList = document.getElementById("movesList");
+                selectedPokemonDetails.moves.forEach(move => {
+                    const li = document.createElement("li");
+                    li.innerText = move;
+                    movesList.appendChild(li);
+                });
+                changeBodyColor(selectedPokemonDetails.types[0])
+            } else {
+                
+                window.location.href = "index.html";
+            }
+
+            const addBtn = document.getElementById("add-button");
+            addBtn.addEventListener("click", function () {
+                let pokemonDetails = {
+                    name: selectedPokemonDetails.name,
+                    image: selectedPokemonDetails.image,
+                    backImage: selectedPokemonDetails.backImage || selectedPokemonDetails.image,
+                    stats: {
+                        hp: selectedPokemonDetails.stats.hp,
+                        attack: selectedPokemonDetails.stats.attack,
+                        defense: selectedPokemonDetails.stats.defense,
+                        specialAttack: selectedPokemonDetails.stats.specialAttack,
+                        specialDefense: selectedPokemonDetails.stats.specialDefense,
+                        speed: selectedPokemonDetails.stats.speed
+                    },
+                    types: selectedPokemonDetails.types,
+                    moves: selectedPokemonDetails.moves
+                };
+
+                let savedPokemonList = JSON.parse(localStorage.getItem('saved-pokemon-list')) || [];
+                let index = savedPokemonList.findIndex(pokemon => pokemon.name === pokemonDetails.name);
+
+                if (index === -1) {
+                    savedPokemonList.push(pokemonDetails);
+                } else {
+                    savedPokemonList.splice(index, 1);
+                }
+
+                addBtn.innerHTML = (index === -1) ? "Remover" : "Adicionar";
+                localStorage.setItem('saved-pokemon-list', JSON.stringify(savedPokemonList));
+                console.log(savedPokemonList);
+            });
+            function changeBodyColor(pokemonType){
+                const body = document.body
+                switch(pokemonType){
+                    case 'normal':
+                                    body.style.backgroundColor = '#A8A77A';
+                                    break;
+                                case 'fire':
+                                    body.style.backgroundColor = '#EE8130';
+                                    break;
+                                case 'water':
+                                    body.style.backgroundColor = '#6390F0';
+                                    break;
+                                case 'electric':
+                                    body.style.backgroundColor = '#F7D02C';
+                                    break
+                                case 'grass':
+                                    body.style.backgroundColor = '#7AC74C';
+                                    break;
+                                case 'ice':
+                                    body.style.backgroundColor = '#96D9D6';
+                                    break;
+                                case 'fighting':
+                                    body.style.backgroundColor = '#C22E28';
+                                    break;
+                                case 'poison':
+                                    body.style.backgroundColor = '#A33EA1';
+                                    break;
+                                case 'ground':
+                                    body.style.backgroundColor = '#E2BF65';
+                                    break;
+                                case 'flying':
+                                    body.style.backgroundColor = '#A98FF3';
+                                    break;
+                                case 'psychic':
+                                    body.style.backgroundColor = '#F95587';
+                                    break;
+                                case 'bug':
+                                    body.style.backgroundColor = '#A6B91A';
+                                    break;
+                                case 'rock':
+                                    body.style.backgroundColor = '#B6A136';
+                                    break;
+                                case 'ghost':
+                                    body.style.backgroundColor = '#735797';
+                                    break;
+                                case 'dark':
+                                    body.style.backgroundColor = '#705746';
+                                    break;
+                                case 'steel':
+                                    body.style.backgroundColor = '#B7B7CE';
+                                    break;
+                                case 'fairy':
+                                    body.style.backgroundColor = '#D685AD';
+                                    break;
+                                case 'dragon':
+                                    body.style.backgroundColor = '#6F35FC';
+                                    break;
+                                default:
+                                    body.style.backgroundColor = 'gray';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

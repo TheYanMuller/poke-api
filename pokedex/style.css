@@ -1,0 +1,120 @@
+body{
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+    color: white;
+}
+header{
+    background-color: rgb(12, 12, 12);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+.btnPoke{
+    width: 100px;
+    height: 40px;
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 20px;
+}
+#pokemonsDiv{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    
+    grid-gap: 30px; /* Espaçamento entre as células */
+    
+}
+#pokemonsDiv2{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.pokemon-container{
+    width: 200px;
+    height: 300px;
+    border-radius: 20px;
+    border: 3px solid ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.tipos{
+    width: 60px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+}
+.tipos:first-child{
+    margin-bottom: 5px;
+}
+#header2{
+    display: flex;
+    align-items: center;    
+}
+.add-button{
+    height: 30px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.remove-button{
+    height: 30px;
+    border-radius: 20px;
+    background-color: white;
+    border: 1px solid black;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.detailsBtn{
+    height: 30px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/*details page*/
+#main-details-page{
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#pokemonDetails{
+    width: 80%;
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
+}
+#img-page-details{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#frontImage{
+    width: 150px;
+    
+}
+#backImage{
+    width: 150px;
+    
+}
